@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  test:
     executor:
       name: node/default
     steps:
@@ -10,17 +10,17 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm test
-            development-deploy:
-          machine:
-            enabled: true
+            - run: npm test 
+ development-deploy:
+    machine:
+      enabled: true
         steps:
          -add_ssh_keys:
           fingerprints: 
            -"9e:3c:6b:62:fc:60:5c:71:65:c3:7e:3b:8b:1a:8c:48"
         - run:
             command:
-              ssh -i ubuntu@18.234.219.63 "bash deploy.sh"
+              ssh ubuntu@18.234.219.63 "bash deploy.sh"
  
  approval-job:
     
@@ -33,7 +33,8 @@ jobs:
              - "9e:3c:6b:62:fc:60:5c:71:65:c3:7e:3b:8b:1a:8c:48"
       - run:
           command:
-            ssh -i ubuntu@3.90.218.59 "bash deploy.sh"
+            ssh ubuntu@3.90.218.59 "bash deploy.sh"
+
 workflows:
     build-and-test:
        jobs: 
@@ -59,4 +60,4 @@ workflows:
            - approval-job
             filters:
               branches:
-                only: master 
+                only: master
